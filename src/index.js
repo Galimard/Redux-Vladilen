@@ -38,16 +38,6 @@ subBtn.addEventListener('click', () => {
     store.dispatch(decrement());
 });
 
-store.subscribe(() => {
-    const state = store.getState();
-
-    counter.textContent = state.counter;
-    document.body.className = state.theme.value;
-});
-
- //для начальной инициализации стейта, после подписки вызываем dispatch
-store.dispatch({ type: 'INIT_APPLICATION'});
-
 asyncBtn.addEventListener('click', () => {
     store.dispatch(asyncIncrement());  
 });
@@ -56,3 +46,15 @@ themeBtn.addEventListener('click', () => {
     const newTheme = document.body.classList.contains('light') ? 'dark' : 'light';
     store.dispatch(changeTheme(newTheme));
 });
+
+store.subscribe(() => {
+    const state = store.getState();
+
+    counter.textContent = state.counter;
+    document.body.className = state.theme.value;
+
+   [addBtn, subBtn, themeBtn, asyncBtn].forEach(btn => btn.disabled = state.theme.disabled); 
+});
+
+ //для начальной инициализации стейта, после подписки вызываем dispatch
+store.dispatch({ type: 'INIT_APPLICATION'});
