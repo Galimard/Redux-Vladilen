@@ -1,3 +1,6 @@
+import {createStore} from 'redux';
+import { decrement, increment } from './redux/actions';
+import { rootReducer } from './redux/rootReducer';
 import './styles.css';
 
 const counter = document.getElementById('counter');
@@ -6,31 +9,31 @@ const subBtn = document.getElementById('sub');
 const asyncBtn = document.getElementById('async');
 const themeBtn = document.getElementById('theme');
 
-let state = 0;
-
-function render() {
-    counter.textContent = state.toString();
-}
+const store = createStore(rootReducer, 0); //д.б. объектом
 
 addBtn.addEventListener('click', () => {
-    state++;
-    render();
+    store.dispatch(increment());
 });
 
 subBtn.addEventListener('click', () => {
-    state--;
-    render();
+    store.dispatch(decrement());
 });
+
+store.subscribe(() => {
+    const state = store.getState();
+
+    counter.textContent = state;
+});
+
+ //для начальной инициализации стейта, после подписки вызываем dispatch
+store.dispatch({ type: 'INIT_APPLICATION'});
 
 asyncBtn.addEventListener('click', () => {
     setTimeout(() => {
-        state++;
-        render();
+        
     }, 2000);    
 });
 
 themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark');  
+    // document.body.classList.toggle('dark');  
 });
-
-render();
