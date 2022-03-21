@@ -1,5 +1,7 @@
-import {createStore} from 'redux';
-import { decrement, increment } from './redux/actions';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger'; //выводит данные в консоль
+import { decrement, increment, asyncIncrement } from './redux/actions';
 import { rootReducer } from './redux/rootReducer';
 import './styles.css';
 
@@ -9,7 +11,25 @@ const subBtn = document.getElementById('sub');
 const asyncBtn = document.getElementById('async');
 const themeBtn = document.getElementById('theme');
 
-const store = createStore(rootReducer, 0); //д.б. объектом
+//пример middleware
+// function logger(state) {
+//     return function(next) {
+//         return function(action) {
+//             console.log('prev state', state.getState());
+//             console.log('action', action);
+//             const newState = next(action);
+//             console.log('next state', state.getState());
+//             return newState;
+//         }
+//     }
+// }
+
+const store = createStore(//д.б. объектом; асинхронный вариант
+    rootReducer, 
+    0, 
+    applyMiddleware(thunk, logger)
+    ); 
+// const store = createStore(rootReducer, 0); //д.б. объектом; синхронный вариант 
 
 addBtn.addEventListener('click', () => {
     store.dispatch(increment());
@@ -29,9 +49,7 @@ store.subscribe(() => {
 store.dispatch({ type: 'INIT_APPLICATION'});
 
 asyncBtn.addEventListener('click', () => {
-    setTimeout(() => {
-        
-    }, 2000);    
+    store.dispatch(asyncIncrement());  
 });
 
 themeBtn.addEventListener('click', () => {
