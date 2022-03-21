@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'; //выводит данные в консоль
-import { decrement, increment, asyncIncrement } from './redux/actions';
+import { decrement, increment, asyncIncrement, changeTheme } from './redux/actions';
 import { rootReducer } from './redux/rootReducer';
 import './styles.css';
 
@@ -26,7 +26,6 @@ const themeBtn = document.getElementById('theme');
 
 const store = createStore(//д.б. объектом; асинхронный вариант
     rootReducer, 
-    0, 
     applyMiddleware(thunk, logger)
     ); 
 // const store = createStore(rootReducer, 0); //д.б. объектом; синхронный вариант 
@@ -42,7 +41,8 @@ subBtn.addEventListener('click', () => {
 store.subscribe(() => {
     const state = store.getState();
 
-    counter.textContent = state;
+    counter.textContent = state.counter;
+    document.body.className = state.theme.value;
 });
 
  //для начальной инициализации стейта, после подписки вызываем dispatch
@@ -53,5 +53,6 @@ asyncBtn.addEventListener('click', () => {
 });
 
 themeBtn.addEventListener('click', () => {
-    // document.body.classList.toggle('dark');  
+    const newTheme = document.body.classList.contains('light') ? 'dark' : 'light';
+    store.dispatch(changeTheme(newTheme));
 });
