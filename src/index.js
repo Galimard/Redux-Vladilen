@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'; //выводит данные в консоль
+import { composeWithDevTools } from '@redux-devtools/extension';
 import { decrement, increment, asyncIncrement, changeTheme } from './redux/actions';
 import { rootReducer } from './redux/rootReducer';
 import './styles.css';
@@ -26,8 +27,10 @@ const themeBtn = document.getElementById('theme');
 
 const store = createStore(//д.б. объектом; асинхронный вариант
     rootReducer, 
-    applyMiddleware(thunk, logger)
-    ); 
+    composeWithDevTools(
+        applyMiddleware(thunk, logger)
+    )    
+); 
 // const store = createStore(rootReducer, 0); //д.б. объектом; синхронный вариант 
 
 addBtn.addEventListener('click', () => {
