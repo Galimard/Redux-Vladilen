@@ -1,7 +1,7 @@
 ## Запустить приложение
 npm start
 ## Установить Redux  
-npm install @reduxjs/toolkit
+npm install @reduxjs/toolkit  
 npm install react-redux
 ## Установить Redux Thunk
 npm install redux-thunk
